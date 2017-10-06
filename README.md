@@ -7,5 +7,5 @@ By default the AV detection script is not loaded.
 # Installation
 ```
 bro-pkg refresh
-bro-pkg install bro/corelight/bro-long-connections
+bro-pkg install bro/fatemabw/bro-inventory-scripts
 ```
