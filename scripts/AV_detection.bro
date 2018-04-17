@@ -79,7 +79,7 @@ event DNS::log_dns (rec: DNS::Info) &priority=5
         }
         
     }
-event HTTP::log_http(rec: DNS::Info) &priority=10
+event HTTP::log_http(rec: HTTP::Info) &priority=10
 {
   if(rec$method == "POST" && /conf.f.360.cn/ in rec$host)
   {
