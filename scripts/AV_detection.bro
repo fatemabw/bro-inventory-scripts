@@ -82,7 +82,7 @@ event DNS::log_dns (rec: DNS::Info) &priority=5
 event HTTP::log_http(rec: HTTP::Info) &priority=10
 {
   if(rec$method == "POST" && /conf.f.360.cn/ in rec$host)
-  {
+  {   local result: Software::name_and_version;
       result$name = "Qihu";
       Software::found(rec$id, [$name=result$name, $host=rec$id$orig_h, $software_type=QIHU]);
       
