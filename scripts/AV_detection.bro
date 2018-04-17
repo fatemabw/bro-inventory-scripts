@@ -63,20 +63,33 @@ event DNS::log_dns (rec: DNS::Info) &priority=5
         if ( /keystone.mwbsys.com/ in rec$query )
         {   
             result$name = "MalwareBytes";
-            Software::found(rec$id, [$version=result$version, $name=result$name, $host=rec$id$orig_h, $software_type=MALWAREBYTES,$unparsed_version=rec$query]);   
+            Software::found(rec$id, [$name=result$name, $host=rec$id$orig_h, $software_type=MALWAREBYTES,$unparsed_version=rec$query]);   
         }
         
         if ( /sophosxl.net/ in rec$query )
         {   
             result$name = "Sophos";
-            Software::found(rec$id, [$version=result$version, $name=result$name, $host=rec$id$orig_h, $software_type=SOPHOS,$unparsed_version=rec$query]);   
+            Software::found(rec$id, [$name=result$name, $host=rec$id$orig_h, $software_type=SOPHOS,$unparsed_version=rec$query]);   
         }
         
         if ( /ff.avast.com/ in rec$query )
         {   
             result$name = "Avast";
-            Software::found(rec$id, [$version=result$version, $name=result$name, $host=rec$id$orig_h, $software_type=AVAST,$unparsed_version=rec$query]);   
+            Software::found(rec$id, [$name=result$name, $host=rec$id$orig_h, $software_type=AVAST,$unparsed_version=rec$query]);   
         }
         
-         
     }
+event HTTP::log_http(rec: DNS::Info) &priority=10
+{
+  if(rec$method == "POST" && /conf.f.360.cn/ in rec$host)
+  {
+      result$name = "Qihu";
+      Software::found(rec$id, [$name=result$name, $host=rec$id$orig_h, $software_type=QIHU]);
+      
+  }
+
+}
+
+
+
+
