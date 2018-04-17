@@ -10,6 +10,16 @@
 ##MalwareBytes##
 # The DNS keystone.mwbsys.com is used for verification of license keys by the various Malwarebytes apps.
 
+##AVAST##
+# AVAST uses Real Site Protection, having own DNS servers, and using ff.avast.com as their streaming server to push updates to the clients
+
+##Sophos##
+# Sophos uses Sophos Extensible List (SXL) for providing Live protection
+
+##Qihu##
+# Qihu is a Chinese AV solution
+
+
 @load base/frameworks/software
 @load base/protocols/dns
 
@@ -20,6 +30,9 @@ module AV;
         ## Identifier for AV software
             MCAFEE,
             MALWAREBYTES,
+            AVAST,
+            SOPHOS,
+            QIHU,
         };
 
         type Software::name_and_version: record {
@@ -52,5 +65,18 @@ event DNS::log_dns (rec: DNS::Info) &priority=5
             result$name = "MalwareBytes";
             Software::found(rec$id, [$version=result$version, $name=result$name, $host=rec$id$orig_h, $software_type=MALWAREBYTES,$unparsed_version=rec$query]);   
         }
+        
+        if ( /sophosxl.net/ in rec$query )
+        {   
+            result$name = "Sophos";
+            Software::found(rec$id, [$version=result$version, $name=result$name, $host=rec$id$orig_h, $software_type=SOPHOS,$unparsed_version=rec$query]);   
+        }
+        
+        if ( /ff.avast.com/ in rec$query )
+        {   
+            result$name = "Avast";
+            Software::found(rec$id, [$version=result$version, $name=result$name, $host=rec$id$orig_h, $software_type=AVAST,$unparsed_version=rec$query]);   
+        }
+        
          
     }
