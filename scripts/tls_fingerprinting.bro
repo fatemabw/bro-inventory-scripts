@@ -94,7 +94,7 @@ event ssl_client_hello(c: connection, version: count, possible_ts: time, client_
                   c$tlsfp$TLSclient = TLSFingerprinting::database[hash];
                 }
          else   {
-                  c$tlsfp$TLSclient = "Unknown"
+                  c$tlsfp$TLSclient = "Unknown";
                 }
          local version_str=SSL::version_strings[version];
          local rec: TLSFP::Info = [$c_ts=c$ssl$ts, $conn_uid=c$uid, $c_id=c$id , $c_history=c$history, $TLSclient=c$tlsfp$TLSclient, $TLSversion=version_str, $TLShash=hash];
