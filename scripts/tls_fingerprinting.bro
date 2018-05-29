@@ -14,12 +14,13 @@ export {
 
     # Define a new type called TLSFP::Info.
     type Info: record {
-        c_ts: time &log;
+        ts: time &log;
         conn_uid: string &log;
         c_id: conn_id &log;
         c_history: string &log;
         TLSclient: string &log;
         TLSversion: string &log;
+        TLShash: string &log;
         };
 }
 
@@ -38,7 +39,7 @@ redef record connection += {
 event bro_init()
     {
     # Create the logging stream.
-    Log::create_stream(LOG, [$columns=Info, $path="TLSfingerprint"]);
+    Log::create_stream(LOG, [$columns=Info, $path="tlsfp"]);
     }
 
 event ssl_extension(c: connection, is_orig: bool, code: count, val: string)
@@ -89,11 +90,15 @@ event ssl_client_hello(c: connection, version: count, possible_ts: time, client_
         local hash = md5_hash_finish(h);
 
         if ( hash in TLSFingerprinting::database )
-                { c$tlsfp$TLSclient = TLSFingerprinting::database[hash];
-                  local version_str=SSL::version_strings[version];
-                  local rec: TLSFP::Info = [$c_ts=c$ssl$ts, $conn_uid=c$uid, $c_id=c$id , $c_history=c$history, $TLSclient=c$tlsfp$TLSclient, $TLSversion=version_str];
-                  Log::write( TLSFP::LOG, rec);
-                  return;
+                { 
+                  c$tlsfp$TLSclient = TLSFingerprinting::database[hash];
                 }
+         else   {
+                  c$tlsfp$TLSclient = "Unknown";
+                }
+         local version_str=SSL::version_strings[version];
+         local rec: TLSFP::Info = [$ts=c$ssl$ts, $conn_uid=c$uid, $c_id=c$id , $c_history=c$history, $TLSclient=c$tlsfp$TLSclient, $TLSversion=version_str, $TLShash=hash];
+         Log::write( TLSFP::LOG, rec);
+         return;
 
         }
